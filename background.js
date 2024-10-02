@@ -48,7 +48,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
 });
 
-
 // ChatGPT APIにテキストを送信する関数
 async function proofreadText(text, apiKey) {
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -143,7 +142,6 @@ function displayCorrectedText(correctedText) {
         resultDiv.style.maxHeight = '300px';
         resultDiv.style.fontFamily = 'Arial, sans-serif'; // 読みやすいフォント
         resultDiv.style.fontSize = '14px'; // 適切なフォントサイズ
-        resultDiv.style.position = 'fixed';
 
         // 閉じるボタンを作成
         const closeButton = document.createElement('span');
@@ -162,10 +160,16 @@ function displayCorrectedText(correctedText) {
 
         // 閉じるボタンをdivに追加
         resultDiv.appendChild(closeButton);
-
         document.body.appendChild(resultDiv);
     }
 
-    // 校正結果を表示
-    resultDiv.innerHTML += `<h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3><p style="margin: 0;">${correctedText}</p>`;
+    // 既存の内容をクリアして新しい校正結果を表示
+    resultDiv.innerHTML = `<span style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 18px; font-weight: bold;">×</span>
+                         <h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
+                         <p style="margin: 0;">${correctedText}</p>`;
+
+    // 再度閉じるボタンのイベントを追加
+    resultDiv.querySelector('span').addEventListener('click', () => {
+        resultDiv.remove();
+    });
 }
