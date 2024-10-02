@@ -68,7 +68,7 @@ function displayCorrectedTextWithDiff(originalText, correctedText) {
 }
 
 // 差分を計算して、変更箇所のみをハイライトして表示する関数
-function displayCorrectedTextWithHighlights(originalText, correctedText) {
+function displayCorrectedTextWithHighlights(model, originalText, correctedText) {
     const diff = Diff.diffWords(originalText, correctedText);
 
     let resultHTML = '';
@@ -119,7 +119,7 @@ function displayCorrectedTextWithHighlights(originalText, correctedText) {
         document.body.appendChild(resultDiv);
 
         // 既存の内容をクリアして新しい校正結果を表示
-        resultDiv.innerHTML = `<h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
+        resultDiv.innerHTML = `<h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果(${model}):</h3>
                          <p style="padding: 10px;">${resultHTML}</p>`;
 
         // 閉じるボタンのクリックイベント

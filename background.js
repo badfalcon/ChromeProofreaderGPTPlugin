@@ -10,8 +10,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === "proofreadText" && info.selectionText) {
         const selectedText = info.selectionText;
 
-        chrome.storage.sync.get(['apiKey'], async (result) => {
-            if (result.apiKey) {
+        chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
+            if (result.apiKey && result.model) {
                 // ローディングオーバーレイを表示
                 chrome.scripting.executeScript({
                     target: { tabId: tab.id },
@@ -19,13 +19,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                 });
 
                 try {
-                    const correctedText = await proofreadText(selectedText, result.apiKey);
+                    const correctedText = await proofreadText(selectedText, result.apiKey, result.model);
 
                     // 差分をハイライト表示する関数を呼び出し
                     chrome.scripting.executeScript({
                         target: { tabId: tab.id },
-                        func: (originalText, correctedText) => displayCorrectedTextWithHighlights(originalText, correctedText),
-                        args: [selectedText, correctedText]
+                        func: (model, originalText, correctedText) => displayCorrectedTextWithHighlights(model, originalText, correctedText),
+                        args: [result.model, selectedText, correctedText]
                     });
                 } catch (error) {
                     console.error("エラーメッセージ:", error.message);
@@ -50,10 +50,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
 });
 
-
-
-// ChatGPT APIを呼び出して校正する関数 (GPT-3.5用)
-async function proofreadText(text, apiKey) {
+// ChatGPT APIを呼び出して校正する関数
+async function proofreadText(text, apiKey, model) {
     try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
@@ -62,7 +60,7 @@ async function proofreadText(text, apiKey) {
                 "Authorization": `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: model,
                 messages: [
                     {
                         role: "system",

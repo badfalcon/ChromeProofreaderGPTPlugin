@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APIキー設定</title>
+    <title>校正プラグイン</title>
     <style>
         body { font-family: Arial, sans-serif; width: 400px; padding: 20px; }
         label { display: block; margin-bottom: 10px; }
@@ -12,10 +12,21 @@
     </style>
 </head>
 <body>
-<h1>APIキーを設定</h1>
-<label for="apiKey">ChatGPT APIキー:</label>
-<input type="text" id="apiKey" placeholder="Enter your API key">
-<button id="saveKeyButton">保存</button>
+<h1>校正プラグイン</h1>
+<p>
+    <label for="apiKey">ChatGPT APIキー:</label>
+    <input type="text" id="apiKey" placeholder="Enter your API key">
+</p>
+<p>
+    <label for="model">モデル選択:</label>
+    <select id="model" name="model">
+        <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+        <option value="gpt-4">gpt-4</option>
+        <option value="gpt-4o">gpt-4o</option>
+        <option value="gpt-4o-mini">gpt-4o-mini</option>
+    </select>
+</p>
+<button id="saveSettingsButton">保存</button>
 <script src="popup.js"></script>
 </body>
 </html>
