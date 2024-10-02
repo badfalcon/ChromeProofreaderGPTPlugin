@@ -15,7 +15,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             if (result.apiKey) {
                 // ローディングアニメーションを表示
                 chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
+                    target: {tabId: tab.id},
                     function: showLoadingOverlay
                 });
 
@@ -24,20 +24,20 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
                     // 校正結果をページ内に表示
                     chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
+                        target: {tabId: tab.id},
                         function: displayCorrectedText,
                         args: [correctedText]
                     });
                 } catch (error) {
                     chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
+                        target: {tabId: tab.id},
                         function: displayCorrectedText,
                         args: [`エラーが発生しました: ${error.message}`]
                     });
                 } finally {
                     // ローディングアニメーションを非表示にする
                     chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
+                        target: {tabId: tab.id},
                         function: hideLoadingOverlay
                     });
                 }
@@ -61,8 +61,44 @@ async function proofreadText(text, apiKey) {
         body: JSON.stringify({
             model: 'gpt-4o-mini',
             messages: [
-                { role: 'system', content: 'You are a text proofreader. Correct any spelling, grammar, or punctuation mistakes.' },
-                { role: 'user', content: text }
+                {
+                    role: 'system',
+                    content: `
+          取引先に送る文章を校正してください。
+
+          以下の詳細を確認してください。
+          - 誤字脱字がないか
+          - 文法的な誤りがないか
+          - 丁寧な敬語が使われているか
+          - 分かりやすく簡潔な表現が使われているか
+          - 取引先に適切なトーンで書かれているか
+
+          # Steps
+          1. テキスト全体を読み、文法、表現、敬語などに問題がないか確認する。
+          2. 誤字脱字があれば修正する。
+          3. 日本語の文法や構成に問題があれば修正する。
+          4. 敬語の使い方に問題があれば修正する。
+          5. 全体を再度確認し、簡潔かつ適切な表現になっているかチェックする。
+
+          # Output Format
+          校正後の文章を提供してください。
+
+          # Examples
+          
+          **Original:**
+          この度無事に商品をお受け取りし、心から感謝しております。追加の注文についてお伺いしたいと考えておりますが、お時間のある時にお知らせ下さい。
+
+          **校正後:**
+          この度、無事に商品を受け取ることができ、心より感謝申し上げます。追加のご注文につきまして、お伺いしたく存じますので、お時間がございます際にお知らせくださいませ。
+
+          (Note: 実際の例はより長くなるかもしれません。実際の文書を使用してください。)
+
+          # Notes
+          - 敬語は取引関係に相応しいものを使用してください。
+          - 内容が正確であることを確認してください。
+          `
+                },
+                {role: 'user', content: text}
             ],
             max_tokens: 500
         })
@@ -71,6 +107,7 @@ async function proofreadText(text, apiKey) {
     const data = await response.json();
     return data.choices[0].message.content;
 }
+
 
 // ローディングオーバーレイを表示する関数
 function showLoadingOverlay() {
