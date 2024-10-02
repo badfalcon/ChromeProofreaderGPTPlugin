@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIキー設定</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        label { display: block; margin-bottom: 10px; }
+        input { width: 100%; padding: 8px; margin-bottom: 20px; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+<h1>APIキーを設定</h1>
+<label for="apiKey">ChatGPT APIキー:</label>
+<input type="text" id="apiKey" placeholder="Enter your API key">
+<button id="saveKeyButton">保存</button>
+
+<script>
+    document.getElementById('saveKeyButton').addEventListener('click', () => {
+        const apiKey = document.getElementById('apiKey').value;
+        chrome.storage.sync.set({ apiKey: apiKey }, () => {
+            alert('APIキーが保存されました！');
+        });
+    });
+
+    // 既に保存されているAPIキーを表示
+    chrome.storage.sync.get(['apiKey'], (result) => {
+        if (result.apiKey) {
+            document.getElementById('apiKey').value = result.apiKey;
+        }
+    });
+</script>
+</body>
+</html>

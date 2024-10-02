@@ -1,11 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "Text Proofreader",
+  "name": "ChatGPT校正拡張",
   "version": "1.0",
-  "description": "校正のために選択したテキストをChatGPT APIに送信します",
-  "permissions": ["contextMenus", "activeTab", "storage", "scripting"],
+  "description": "選択したテキストをChatGPT APIを使って校正する拡張機能",
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
   "background": {
     "service_worker": "background.js"
   },
-  "options_page": "options.html"
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["diff.min.js", "content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
 }

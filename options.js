@@ -1,21 +1,15 @@
-// 保存されたAPIキーを読み込んで表示
-document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['apiKey'], (result) => {
-        if (result.apiKey) {
-            document.getElementById('apiKeyInput').value = result.apiKey;
-        }
+document.getElementById('saveKeyButton').addEventListener('click', () => {
+    const apiKey = document.getElementById('apiKey').value;
+
+    // APIキーをChromeストレージに保存
+    chrome.storage.sync.set({ apiKey: apiKey }, () => {
+        alert('APIキーが保存されました！');
     });
 });
 
-// APIキーを保存
-document.getElementById('saveButton').addEventListener('click', () => {
-    const apiKey = document.getElementById('apiKeyInput').value;
-
-    if (apiKey) {
-        chrome.storage.sync.set({ apiKey }, () => {
-            alert('APIキーが保存されました');
-        });
-    } else {
-        alert('APIキーを入力してください');
+// 保存されたAPIキーがある場合、フォームに表示
+chrome.storage.sync.get(['apiKey'], (result) => {
+    if (result.apiKey) {
+        document.getElementById('apiKey').value = result.apiKey;
     }
 });
