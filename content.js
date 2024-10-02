@@ -93,7 +93,6 @@ function displayCorrectedTextWithHighlights(originalText, correctedText) {
         resultDiv.style.bottom = '20px';
         resultDiv.style.right = '20px';
         resultDiv.style.width = '300px';
-        resultDiv.style.padding = '10px';
 
         // 見やすくするためのスタイルを設定
         resultDiv.style.backgroundColor = '#ffffff';  // 背景色を白に固定
@@ -116,19 +115,20 @@ function displayCorrectedTextWithHighlights(originalText, correctedText) {
         closeButton.style.fontSize = '18px';
         closeButton.style.fontWeight = 'bold';
 
+        // 閉じるボタンをdivに追加
+        document.body.appendChild(resultDiv);
+
+        // 既存の内容をクリアして新しい校正結果を表示
+        resultDiv.innerHTML = `<h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
+                         <p style="padding: 10px;">${resultHTML}</p>`;
+
         // 閉じるボタンのクリックイベント
         closeButton.addEventListener('click', () => {
             resultDiv.remove();
         });
 
-        // 閉じるボタンをdivに追加
+        // 閉じるボタンの追加
         resultDiv.appendChild(closeButton);
-        document.body.appendChild(resultDiv);
-
-        // 既存の内容をクリアして新しい校正結果を表示
-        resultDiv.innerHTML = `<span style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 18px; font-weight: bold;">×</span>
-                         <h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
-                         <p style="margin: 0;">${resultHTML}</p>`;
     } else {
         resultDiv.querySelector('p').innerHTML = resultHTML;
     }
