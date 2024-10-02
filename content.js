@@ -134,7 +134,6 @@ function displayCorrectedTextWithHighlights(originalText, correctedText) {
     }
 }
 
-
 // 校正結果を単純に表示する関数
 function displayCorrectedText(message) {
     let resultDiv = document.getElementById('proofreadResult');
