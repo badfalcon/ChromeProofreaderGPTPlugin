@@ -15,6 +15,24 @@ function showLoadingOverlay() {
     overlay.style.color = 'white';
     overlay.style.fontSize = '20px';
     overlay.textContent = '校正中...';
+
+    // スピナーを追加
+    let spinner = document.createElement('div');
+    spinner.id = 'loading';
+    spinner.style.display = 'block';
+    spinner.style.position = 'fixed';
+    spinner.style.width = '100px';
+    spinner.style.height = '100px';
+    spinner.style.border = '10px solid rgba(255,255,255,.3)';
+    spinner.style.borderRadius = '50%';
+    spinner.style.borderTopColor = '#fff';
+
+    spinner.animate({
+        transform: 'rotate(360deg)'
+    }, {duration: 1000, easing: "ease-in-out", iterations: Infinity});
+
+    overlay.appendChild(spinner);
+
     document.body.appendChild(overlay);
 }
 
