@@ -118,29 +118,6 @@ function displayCorrectedTextWithHighlights(model, originalText, correctedText) 
 
 // 校正結果を単純に表示する関数
 function displayCorrectedText(message) {
-    let resultDiv = document.getElementById('proofreadResult');
-
-    if (!resultDiv) {
-        resultDiv = document.createElement('div');
-        resultDiv.id = 'proofreadResult';
-        resultDiv.style.position = 'fixed';
-        resultDiv.style.bottom = '20px';
-        resultDiv.style.right = '20px';
-        resultDiv.style.width = '300px';
-        resultDiv.style.padding = '10px';
-        resultDiv.style.backgroundColor = '#ffffff';
-        resultDiv.style.color = '#000000';
-        resultDiv.style.border = '1px solid #ccc';
-        resultDiv.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
-        resultDiv.style.zIndex = '10001';
-        resultDiv.style.fontFamily = 'Arial, sans-serif';
-        resultDiv.style.fontSize = '14px';
-
-        document.body.appendChild(resultDiv);
-    }
-
-    resultDiv.innerHTML = `
-    <h3 style="margin: 0; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
-    <p style="margin: 0;">${message}</p>
-  `;
+    let proofreadWindow = getProofreadWindow();
+    proofreadWindow.querySelector('p').textContent = message;
 }
