@@ -26,47 +26,6 @@ function hideLoadingOverlay() {
     }
 }
 
-// 差分を比較して、変更された部分をハイライト表示する関数
-function displayCorrectedTextWithDiff(originalText, correctedText) {
-    const diff = Diff.diffWords(originalText, correctedText);
-
-    // 校正後の文章で変更された部分だけを表示
-    const highlightedText = diff.map((part) => {
-        // 修正された部分をハイライト
-        if (part.added) {
-            return `<span style="background-color: yellow;">${part.value}</span>`;
-        }
-        // 削除された部分は表示しない
-        if (part.removed) {
-            return '';
-        }
-        // 変更がない部分も表示しない
-        return '';
-    }).join('');
-
-    // 結果をページに表示する
-    const resultDiv = document.createElement('div');
-    resultDiv.innerHTML = `
-    <h3 style="margin-bottom: 5px; padding-bottom: 10px; font-size: 16px;">校正結果:</h3>
-    <p style="margin: 0;">${highlightedText}</p>
-    <button id="close-result" style="margin-top: 10px;">閉じる</button>
-  `;
-
-    // 前回の結果があれば削除して新しい結果を表示
-    const existingResultDiv = document.getElementById('proofreading-result');
-    if (existingResultDiv) {
-        existingResultDiv.remove();
-    }
-
-    resultDiv.id = 'proofreading-result';
-    document.body.appendChild(resultDiv);
-
-    // 閉じるボタンの動作
-    document.getElementById('close-result').addEventListener('click', () => {
-        resultDiv.remove();
-    });
-}
-
 // 校正結果を表示する関数
 function getProofreadWindow() {
     let proofreadWindow = document.getElementById('proofread-window');
