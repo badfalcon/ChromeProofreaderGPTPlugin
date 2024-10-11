@@ -53,18 +53,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 // ChatGPT APIを呼び出して校正する関数
 async function proofreadText(text, apiKey, model) {
     try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: model,
-                messages: [
-                    {
-                        role: "system",
-                        content: `取引先に送る文章を校正してください。
+        const isStructuredOutputModel = model === "gpt-4o" || model === "gpt-4o-mini";
+        const requestOptionBody = {
+            model: model,
+            messages: [
+                {
+                    role: "system",
+                    content: `取引先に送る文章を校正してください。
 
 以下の詳細を確認してください。
 - 誤字脱字がないか
@@ -100,15 +95,47 @@ async function proofreadText(text, apiKey, model) {
 - 敬語は取引関係に相応しいものを使用してください。
 - 内容が正確であることを確認してください。
             `
-                    },
-                    {
-                        role: "user",
-                        content: text
+                },
+                {
+                    role: "user",
+                    content: text
+                }
+            ],
+            max_tokens: 1000
+        }
+        // 特定のモデルの場合にボディに引数を追加
+        if (isStructuredOutputModel) {
+            requestOptionBody.response_format = {
+                type: "json_schema",
+                    json_schema: {
+                    name: "reasoning_schema",
+                        strict: true,
+                        schema: {
+                        type: "object",
+                            properties: {
+                            proofread_message: {
+                                type: "array",
+                                    items: {
+                                    type: "string"
+                                },
+                                description: "The proofread message"
+                            },
+                        },
+                        required: ["proofread_message"],
+                            additionalProperties: false
                     }
-                ],
-                max_tokens: 1000
-            })
-        });
+                }
+            }
+        }
+        const requestOption = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(requestOptionBody)
+        }
+        const response = await fetch("https://api.openai.com/v1/chat/completions", requestOption);
 
         const data = await response.json();
 
@@ -117,7 +144,18 @@ async function proofreadText(text, apiKey, model) {
 
         // APIレスポンスにchoicesが存在するか確認
         if (data.choices && data.choices.length > 0) {
-            return data.choices[0].message.content.trim();
+            // モデルが構造化出力の場合、proofread_messageを返す
+            if (isStructuredOutputModel) {
+                const content = JSON.parse(data.choices[0].message.content.trim());
+                console.log(content)
+                if (content.proofread_message) {
+                    return content.proofread_message.join("\n");
+                } else {
+                    throw new Error("APIレスポンスが無効です。データが不足しています。");
+                }
+            }else{
+                return data.choices[0].message.content.trim();
+            }
         } else {
             throw new Error("APIレスポンスが無効です。データが不足しています。");
         }
