@@ -1,3 +1,35 @@
+const systemPrompt = `取引先に送る文章を校正してください。
+
+以下の詳細を確認してください。
+- 誤字脱字がないか
+- 文法的な誤りがないか
+- 丁寧な敬語が使われているか
+- 分かりやすく簡潔な表現が使われているか
+- 取引先に適切なトーンで書かれているか
+
+# Steps
+
+1. テキスト全体を読み、文法、表現、敬語などに問題がないか確認する。
+2. 誤字脱字があれば修正する。
+3. 日本語の文法や構成に問題があれば修正する。
+4. 敬語の使い方に問題があれば修正する。
+5. 全体を再度確認し、簡潔かつ適切な表現になっているかチェックする。
+
+# Examples
+
+**Original:**
+この度無事に商品をお受け取りし、心から感謝しております。追加の注文についてお伺いしたいと考えておりますが、お時間のある時にお知らせ下さい。
+
+**校正後:**
+この度、無事に商品を受け取ることができ、心より感謝申し上げます。追加のご注文につきまして、お伺いしたく存じますので、お時間がございます際にお知らせくださいませ。
+
+(Note: 実際の例はより長くなるかもしれません。実際の文書を使用してください。)
+
+# Notes
+
+- 敬語は取引関係に相応しいものを使用してください。
+- 内容が正確であることを確認してください。`
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "proofreadText",
@@ -75,38 +107,7 @@ async function proofreadText(text, apiKey, model) {
             messages: [
                 {
                     role: "system",
-                    content: `取引先に送る文章を校正してください。
-
-以下の詳細を確認してください。
-- 誤字脱字がないか
-- 文法的な誤りがないか
-- 丁寧な敬語が使われているか
-- 分かりやすく簡潔な表現が使われているか
-- 取引先に適切なトーンで書かれているか
-
-# Steps
-
-1. テキスト全体を読み、文法、表現、敬語などに問題がないか確認する。
-2. 誤字脱字があれば修正する。
-3. 日本語の文法や構成に問題があれば修正する。
-4. 敬語の使い方に問題があれば修正する。
-5. 全体を再度確認し、簡潔かつ適切な表現になっているかチェックする。
-
-# Examples
-
-**Original:**
-この度無事に商品をお受け取りし、心から感謝しております。追加の注文についてお伺いしたいと考えておりますが、お時間のある時にお知らせ下さい。
-
-**校正後:**
-この度、無事に商品を受け取ることができ、心より感謝申し上げます。追加のご注文につきまして、お伺いしたく存じますので、お時間がございます際にお知らせくださいませ。
-
-(Note: 実際の例はより長くなるかもしれません。実際の文書を使用してください。)
-
-# Notes
-
-- 敬語は取引関係に相応しいものを使用してください。
-- 内容が正確であることを確認してください。
-            `
+                    content: systemPrompt,
                 },
                 {
                     role: "user",
@@ -117,27 +118,7 @@ async function proofreadText(text, apiKey, model) {
         }
         // 特定のモデルの場合にボディに引数を追加
         if (isStructuredOutputModel) {
-            requestOptionBody.response_format = {
-                type: "json_schema",
-                    json_schema: {
-                    name: "reasoning_schema",
-                        strict: true,
-                        schema: {
-                        type: "object",
-                            properties: {
-                            proofread_message: {
-                                type: "array",
-                                    items: {
-                                    type: "string"
-                                },
-                                description: "The proofread message"
-                            },
-                        },
-                        required: ["proofread_message"],
-                            additionalProperties: false
-                    }
-                }
-            }
+            requestOptionBody.response_format = responseFormat
         }
         const requestOption = {
             method: "POST",
@@ -159,7 +140,6 @@ async function proofreadText(text, apiKey, model) {
             // モデルが構造化出力の場合、proofread_messageを返す
             if (isStructuredOutputModel) {
                 const content = JSON.parse(data.choices[0].message.content.trim());
-                console.log(content)
                 if (content.proofread_message) {
                     return content.proofread_message.join("\n");
                 } else {
@@ -173,6 +153,28 @@ async function proofreadText(text, apiKey, model) {
         }
     } catch (error) {
         console.error("APIエラー:", error);
-        throw new Error("校正中にエラーが発生しました。");
+        throw new Error("校正中にエラーが発生しました。: " + error.message);
+    }
+}
+
+const responseFormat = {
+    type: "json_schema",
+    json_schema: {
+        name: "reasoning_schema",
+        strict: true,
+        schema: {
+            type: "object",
+            properties: {
+                proofread_message: {
+                    type: "array",
+                    items: {
+                        type: "string"
+                    },
+                    description: "The proofread message"
+                },
+            },
+            required: ["proofread_message"],
+            additionalProperties: false
+        }
     }
 }
