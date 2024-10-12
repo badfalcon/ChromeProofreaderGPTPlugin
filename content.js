@@ -1,3 +1,8 @@
+// 選択されたテキストを改行ありで取得する関数
+function getSelectedText() {
+    return document.getSelection().toString();
+}
+
 // ローディングオーバーレイを表示する関数
 function showLoadingOverlay() {
     let overlay = document.createElement('div');
@@ -115,6 +120,9 @@ function createProofreadWindow() {
 
 // 差分を計算して、変更箇所のみをハイライトして表示する関数
 function displayCorrectedTextWithHighlights(model, originalText, correctedText) {
+    originalText = originalText.replace(/\n/g, '<br>');
+    correctedText = correctedText.replace(/\n/g, '<br>');
+
     const diff = Diff.diffWords(originalText, correctedText);
 
     let resultHTML = '';

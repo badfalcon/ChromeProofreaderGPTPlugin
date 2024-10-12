@@ -7,42 +7,58 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === "proofreadText" && info.selectionText) {
-        const selectedText = info.selectionText;
+    if (info.menuItemId === "proofreadText") {
 
         chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
             if (result.apiKey && result.model) {
                 // ローディングオーバーレイを表示
-                chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
+                await chrome.scripting.executeScript({
+                    target: {tabId: tab.id},
                     func: () => showLoadingOverlay(),
                 });
 
-                try {
-                    const correctedText = await proofreadText(selectedText, result.apiKey, result.model);
+                // 選択文字列を改行つきで再取得
+                chrome.scripting.executeScript({
+                    target: {tabId: tab.id},
+                    func: () => getSelectedText(),
+                })
+                .then(async getSelectResult => {
+                    // selectedTextが空の場合はエラーメッセージを表示
+                    if (!getSelectResult[0].result) {
+                        await chrome.scripting.executeScript({
+                            target: {tabId: tab.id},
+                            func: () => displayCorrectedText("選択したテキストが見つかりませんでした。"),
+                        });
+                        return;
+                    }
+                    const selectedText = getSelectResult[0].result;
 
-                    // 差分をハイライト表示する関数を呼び出し
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: (model, originalText, correctedText) => displayCorrectedTextWithHighlights(model, originalText, correctedText),
-                        args: [result.model, selectedText, correctedText]
-                    });
-                } catch (error) {
-                    console.error("エラーメッセージ:", error.message);
+                    try {
+                        const correctedText = await proofreadText(selectedText, result.apiKey, result.model);
 
-                    // エラーメッセージを表示
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: (message) => displayCorrectedText(message),
-                        args: [`エラーが発生しました: ${error.message}`]
-                    });
-                } finally {
-                    // ローディングオーバーレイを非表示
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: () => hideLoadingOverlay(),
-                    });
-                }
+                        // 差分をハイライト表示する関数を呼び出し
+                        await chrome.scripting.executeScript({
+                            target: {tabId: tab.id},
+                            func: (model, originalText, correctedText) => displayCorrectedTextWithHighlights(model, originalText, correctedText),
+                            args: [result.model, selectedText, correctedText]
+                        });
+                    } catch (error) {
+                        console.error("エラーメッセージ:", error.message);
+
+                        // エラーメッセージを表示
+                        await chrome.scripting.executeScript({
+                            target: {tabId: tab.id},
+                            func: (message) => displayCorrectedText(message),
+                            args: [`エラーが発生しました: ${error.message}`]
+                        });
+                    } finally {
+                        // ローディングオーバーレイを非表示
+                        await chrome.scripting.executeScript({
+                            target: {tabId: tab.id},
+                            func: () => hideLoadingOverlay(),
+                        });
+                    }
+                });
             } else {
                 alert('APIキーが設定されていません。オプションページで設定してください。');
             }
@@ -75,10 +91,6 @@ async function proofreadText(text, apiKey, model) {
 3. 日本語の文法や構成に問題があれば修正する。
 4. 敬語の使い方に問題があれば修正する。
 5. 全体を再度確認し、簡潔かつ適切な表現になっているかチェックする。
-
-# Output Format
-
-校正後の文章のみを提供してください。
 
 # Examples
 
