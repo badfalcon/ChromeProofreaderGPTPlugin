@@ -38,8 +38,25 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
+let cssInserted = false;
+
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === "proofreadText") {
+        // CSSを挿入
+        await chrome.scripting.executeScript({
+            target: {tabId: tab.id},
+            func: () => hasRunProofread(),
+        }).then(async function (results) {
+            if (chrome.runtime.lastError || !results || !results.length) {
+                return;  // Permission error, tab closed, etc.
+            }
+            if (results[0] !== true) {
+                await chrome.scripting.insertCSS({
+                    target: {tabId: tab.id},
+                    files: ['proofreaderPlugin.css']
+                });
+            }
+        });
 
         chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
             if (result.apiKey && result.model) {

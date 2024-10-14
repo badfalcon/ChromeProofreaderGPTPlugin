@@ -1,3 +1,10 @@
+// 処理が実行されたかどうかを判定する変数
+function hasRunProofread() {
+    if (window.hasRun === true)
+        return true;  // Will ultimately be passed back to executeScript
+    window.hasRun = true;
+}
+
 // 選択されたテキストを改行ありで取得する関数
 function getSelectedText() {
     return document.getSelection().toString();
@@ -7,30 +14,11 @@ function getSelectedText() {
 function showLoadingOverlay() {
     let overlay = document.createElement('div');
     overlay.id = 'loadingOverlay';
-    overlay.style.position = 'fixed';
-    overlay.style.top = 0;
-    overlay.style.left = 0;
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    overlay.style.zIndex = '10001';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.color = 'white';
-    overlay.style.fontSize = '20px';
     overlay.textContent = '校正中...';
 
     // スピナーを追加
     let spinner = document.createElement('div');
-    spinner.id = 'loading';
-    spinner.style.display = 'block';
-    spinner.style.position = 'fixed';
-    spinner.style.width = '100px';
-    spinner.style.height = '100px';
-    spinner.style.border = '10px solid rgba(255,255,255,.3)';
-    spinner.style.borderRadius = '50%';
-    spinner.style.borderTopColor = '#fff';
+    spinner.id = 'loadingSpinner';
 
     spinner.animate({
         transform: 'rotate(360deg)'
@@ -64,40 +52,18 @@ function getProofreadWindow() {
 function createProofreadWindow() {
     const proofreadWindow = document.createElement('div');
     proofreadWindow.id = 'proofread-window';
-    proofreadWindow.style.position = 'fixed';
-    proofreadWindow.style.bottom = '20px';
-    proofreadWindow.style.right = '20px';
-    proofreadWindow.style.maxWidth = '80%';
-    proofreadWindow.style.minWidth = '100px';
-    proofreadWindow.style.minHeight = '100px';
-    proofreadWindow.style.padding = '10px';
-    proofreadWindow.style.backgroundColor = '#ffffff';
-    proofreadWindow.style.color = '#000000';
-    proofreadWindow.style.border = '1px solid #ccc';
-    proofreadWindow.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
-    proofreadWindow.style.zIndex = '10000';
-    proofreadWindow.style.maxHeight = '300px';
-    proofreadWindow.style.fontFamily = 'Arial, sans-serif';
-    proofreadWindow.style.fontSize = '14px';
 
     const header = document.createElement('div');
-    header.style.display = 'flex';
-    header.style.justifyContent = 'space-between';
-    header.style.alignItems = 'center';
-    header.style.paddingBottom = '5px';
-    header.style.borderBottom = '1px solid lightgray';
+    header.id = 'proofread-header';
 
     const title = document.createElement('h3');
-    title.style.fontWeight = 'bold';
-    title.style.fontSize = '16px';
+    title.id = 'proofread-title';
     title.textContent = '校正結果:';
     header.appendChild(title);
 
     const closeButton = document.createElement('span');
+    closeButton.id = 'proofread-close';
     closeButton.textContent = '×';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.fontSize = '18px';
-    closeButton.style.fontWeight = 'bold';
 
     closeButton.addEventListener('click', () => {
         proofreadWindow.remove();
@@ -106,9 +72,7 @@ function createProofreadWindow() {
     header.appendChild(closeButton);
 
     const result = document.createElement('p');
-    result.style.paddingTop = '10px';
-    result.style.maxHeight = '250px';
-    result.style.overflowY = 'auto';
+    result.id = 'proofread-result';
 
     proofreadWindow.appendChild(header);
     proofreadWindow.appendChild(result);
