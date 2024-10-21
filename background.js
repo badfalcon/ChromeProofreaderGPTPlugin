@@ -33,7 +33,7 @@ const systemPrompt = `取引先に送る文章を校正してください。
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "proofreadText",
-        title: "ChatGPTで校正する",
+        title: "AIに文章を校正してもらう",
         contexts: ["selection"]
     });
 });
