@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AI校正くん",
   "version": "1.0",
-  "description": "選択したテキストをChatGPT APIを使って校正する拡張機能",
+  "description": "選択したテキストをAPI経由でAIに校正してもらう拡張機能",
   "permissions": [
     "contextMenus",
     "storage",
