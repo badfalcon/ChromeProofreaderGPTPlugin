@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT校正拡張",
+  "name": "AI校正くん",
   "version": "1.0",
   "description": "選択したテキストをChatGPT APIを使って校正する拡張機能",
   "permissions": [
