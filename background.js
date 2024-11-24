@@ -1,35 +1,3 @@
-const systemPrompt = `取引先に送る文章を校正してください。
-
-以下の詳細を確認してください。
-- 誤字脱字がないか
-- 文法的な誤りがないか
-- 丁寧な敬語が使われているか
-- 分かりやすく簡潔な表現が使われているか
-- 取引先に適切なトーンで書かれているか
-
-# Steps
-
-1. テキスト全体を読み、文法、表現、敬語などに問題がないか確認する。
-2. 誤字脱字があれば修正する。
-3. 日本語の文法や構成に問題があれば修正する。
-4. 敬語の使い方に問題があれば修正する。
-5. 全体を再度確認し、簡潔かつ適切な表現になっているかチェックする。
-
-# Examples
-
-**Original:**
-この度無事に商品をお受け取りし、心から感謝しております。追加の注文についてお伺いしたいと考えておりますが、お時間のある時にお知らせ下さい。
-
-**校正後:**
-この度、無事に商品を受け取ることができ、心より感謝申し上げます。追加のご注文につきまして、お伺いしたく存じますので、お時間がございます際にお知らせくださいませ。
-
-(Note: 実際の例はより長くなるかもしれません。実際の文書を使用してください。)
-
-# Notes
-
-- 敬語は取引関係に相応しいものを使用してください。
-- 内容が正確であることを確認してください。`
-
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "proofreadText",
@@ -58,8 +26,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             }
         });
 
-        chrome.storage.sync.get(['apiKey', 'model'], async (result) => {
-            if (result.apiKey && result.model) {
+        chrome.storage.sync.get(['apiKey', 'model', 'prompt'], async (result) => {
+            if (result.apiKey && result.model && result.prompt) {
                 // ローディングオーバーレイを表示
                 await chrome.scripting.executeScript({
                     target: {tabId: tab.id},
@@ -83,7 +51,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                     const selectedText = getSelectResult[0].result;
 
                     try {
-                        const correctedText = await proofreadText(selectedText, result.apiKey, result.model);
+                        const correctedText = await proofreadText(selectedText, result.prompt, result.apiKey, result.model);
 
                         // 差分をハイライト表示する関数を呼び出し
                         await chrome.scripting.executeScript({
@@ -109,14 +77,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                     }
                 });
             } else {
-                alert('APIキーが設定されていません。オプションページで設定してください。');
+                alert('設定項目が不足しています。オプションページで設定してください。');
             }
         });
     }
 });
 
 // ChatGPT APIを呼び出して校正する関数
-async function proofreadText(text, apiKey, model) {
+async function proofreadText(text, prompt, apiKey, model) {
     try {
         const isStructuredOutputModel = model === "gpt-4o" || model === "gpt-4o-mini";
         const requestOptionBody = {
@@ -124,7 +92,7 @@ async function proofreadText(text, apiKey, model) {
             messages: [
                 {
                     role: "system",
-                    content: systemPrompt,
+                    content: prompt,
                 },
                 {
                     role: "user",

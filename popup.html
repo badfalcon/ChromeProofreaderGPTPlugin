@@ -9,6 +9,7 @@
         label { display: block; margin-bottom: 10px; }
         input { width: 100%; padding: 8px; margin-bottom: 20px; }
         button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        textarea { width: 100%; padding: 8px; }
     </style>
 </head>
 <body>
@@ -25,6 +26,10 @@
         <option value="gpt-4o">gpt-4o</option>
         <option value="gpt-4o-mini">gpt-4o-mini</option>
     </select>
+</p>
+<p>
+    <label for="prompt">指示文(プロンプト):</label>
+    <textarea id="prompt" placeholder="ここに指示文を入力してください..." rows="4"></textarea>
 </p>
 <button id="saveSettingsButton">保存</button>
 <script src="popup.js"></script>
