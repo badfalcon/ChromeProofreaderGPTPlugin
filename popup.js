@@ -57,3 +57,8 @@ chrome.storage.sync.get(['apiKey', 'model', 'prompt'], (result) => {
         document.getElementById('prompt').value = defaultPrompt;
     }
 });
+
+// オプションページを開く
+document.getElementById('openOptionsLink').addEventListener('click', () => {
+    chrome.runtime.openOptionsPage();
+});
