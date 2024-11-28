@@ -57,10 +57,10 @@
 <body>
 <h1>AI校正くん 設定ページ</h1>
 <form id="options-form">
-    <label for="apiKey">APIキー:</label>
+    <label for="apiKey">APIキー:</label><br>
     <input type="text" id="apiKey" name="apiKey" placeholder="Enter your API key">
 
-    <label for="model">モデル選択:</label>
+    <label for="model">モデル選択:</label><br>
     <select id="model" name="model">
         <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
         <option value="gpt-4">gpt-4</option>
@@ -68,7 +68,7 @@
         <option value="gpt-4o-mini">gpt-4o-mini</option>
     </select>
 
-    <label for="prompt">指示文(プロンプト):</label>
+    <label for="prompt">指示文(プロンプト):</label><br>
     <textarea id="prompt" rows="10" placeholder="ここに指示文を入力してください..."></textarea>
 
     <button type="submit">保存</button>
