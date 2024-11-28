@@ -33,23 +33,17 @@ const defaultPrompt = `取引先に送る文章を校正してください。
 
 - 敬語は取引関係に相応しいものを使用してください。
 - 内容が正確であることを確認してください。`
-
-document.getElementById('saveSettingsButton').addEventListener('click', () => {
-    const apiKey = document.getElementById('apiKey').value;
-    const model = document.getElementById('model').value;
-    const prompt = document.getElementById('prompt').value;
-    chrome.storage.sync.set({apiKey: apiKey, model: model, prompt: prompt}, () => {
-        alert('設定が保存されました！');
-    });
-});
-
 // 既に保存されているAPIキーを表示
 chrome.storage.sync.get(['apiKey', 'model', 'prompt'], (result) => {
     if (result.apiKey) {
-        document.getElementById('apiKey').value = result.apiKey;
+        document.getElementById('apiKey').innerText = "入力済み";
+    } else{
+        document.getElementById('apiKey').innerText = "未入力";
     }
     if (result.model) {
-        document.getElementById('model').value = result.model;
+        document.getElementById('model').innerText = result.model;
+    }else {
+        document.getElementById('model').innerText = "未設定"
     }
     if (result.customPrompt) {
         document.getElementById('prompt').value = result.prompt;

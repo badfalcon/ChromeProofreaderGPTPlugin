@@ -15,23 +15,16 @@
 <body>
 <h1>校正プラグイン</h1>
 <p>
-    <label for="apiKey">ChatGPT APIキー:</label>
-    <input type="text" id="apiKey" placeholder="Enter your API key">
+    <span>ChatGPT APIキー:</span><span id="apiKey"></span>
+<!--    <input type="text" id="apiKey" placeholder="Enter your API key">-->
 </p>
 <p>
-    <label for="model">モデル選択:</label>
-    <select id="model" name="model">
-        <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-        <option value="gpt-4">gpt-4</option>
-        <option value="gpt-4o">gpt-4o</option>
-        <option value="gpt-4o-mini">gpt-4o-mini</option>
-    </select>
+    <span >モデル選択:</span><span id="model"></span>
 </p>
 <p>
     <label for="prompt">指示文(プロンプト):</label>
-    <textarea id="prompt" placeholder="ここに指示文を入力してください..." rows="4"></textarea>
+    <textarea id="prompt" placeholder="未入力" rows="4" disabled="disabled"></textarea>
 </p>
-<button id="saveSettingsButton">保存</button>
 <p>
     <a href="" id="openOptionsLink">設定ページを開く</a>
 </p>
