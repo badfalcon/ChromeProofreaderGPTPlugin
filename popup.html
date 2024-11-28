@@ -3,30 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>校正プラグイン</title>
+    <title>AI校正くん</title>
     <style>
-        body { font-family: Arial, sans-serif; width: 400px; padding: 20px; }
-        label { display: block; margin-bottom: 10px; }
-        input { width: 100%; padding: 8px; margin-bottom: 20px; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        textarea { width: 100%; padding: 8px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        p {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+        span {
+            font-weight: bold;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-<h1>校正プラグイン</h1>
+<h1>AI校正くん</h1>
 <p>
-    <span>ChatGPT APIキー:</span><span id="apiKey"></span>
-<!--    <input type="text" id="apiKey" placeholder="Enter your API key">-->
+    <span>ChatGPT APIキー:</span>
+    <span id="apiKey"></span>
 </p>
 <p>
-    <span >モデル選択:</span><span id="model"></span>
+    <span >モデル選択:</span>
+    <span id="model"></span>
 </p>
 <p>
     <label for="prompt">指示文(プロンプト):</label>
     <textarea id="prompt" placeholder="未入力" rows="4" disabled="disabled"></textarea>
 </p>
 <p>
-    <a href="" id="openOptionsLink">設定ページを開く</a>
+    編集するには <a href="" id="openOptionsLink">設定ページを開く</a>
 </p>
 <script src="popup.js"></script>
 </body>

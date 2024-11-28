@@ -3,21 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>設定ページ</title>
+    <title>AI校正くん 設定ページ</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        label { display: block; }
-        input { width: 100%; padding: 8px;box-sizing: border-box; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        textarea { width: 100%; height: 100%; padding: 8px;box-sizing: border-box;}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        select {
+            height: 45px;
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
-<h2>ChatGPTモデル設定</h2>
+<h1>AI校正くん 設定ページ</h1>
 <form id="options-form">
     <label for="apiKey">APIキー:</label>
     <input type="text" id="apiKey" name="apiKey" placeholder="Enter your API key">
-    <br><br>
 
     <label for="model">モデル選択:</label>
     <select id="model" name="model">
@@ -26,11 +66,9 @@
         <option value="gpt-4o">gpt-4o</option>
         <option value="gpt-4o-mini">gpt-4o-mini</option>
     </select>
-    <br><br>
 
     <label for="prompt">指示文(プロンプト):</label>
-    <textarea id="prompt" rows="20" placeholder="ここに指示文を入力してください..."></textarea>
-    <br><br>
+    <textarea id="prompt" rows="10" placeholder="ここに指示文を入力してください..."></textarea>
 
     <button type="submit">保存</button>
 </form>
