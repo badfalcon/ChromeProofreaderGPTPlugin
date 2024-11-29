@@ -77,7 +77,12 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                     }
                 });
             } else {
-                alert('設定項目が不足しています。オプションページで設定してください。');
+                // エラーメッセージを表示
+                await chrome.scripting.executeScript({
+                    target: {tabId: tab.id},
+                    func: (message) => displayCorrectedText(message),
+                    args: ['設定項目が不足しています。オプションページで設定してください。']
+                });
             }
         });
     }
