@@ -27,7 +27,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         });
 
         chrome.storage.sync.get(['apiKey', 'model', 'prompt'], async (result) => {
-            if (result.apiKey && result.model && result.prompt) {
+            if (result.apiKey && result.model) {
+                if (!result.prompt){
+                    result.prompt = defaultPrompt;
+                }
+
                 // ローディングオーバーレイを表示
                 await chrome.scripting.executeScript({
                     target: {tabId: tab.id},
