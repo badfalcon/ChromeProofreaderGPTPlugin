@@ -33,6 +33,7 @@ const defaultPrompt = `取引先に送る文章を校正してください。
 
 - 敬語は取引関係に相応しいものを使用してください。
 - 内容が正確であることを確認してください。`
+
 // 既に保存されているAPIキーを表示
 chrome.storage.sync.get(['apiKey', 'model', 'prompt'], (result) => {
     if (result.apiKey) {
