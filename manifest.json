@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI校正くん",
-  "version": "1.0",
+  "version": "1.1",
   "description": "選択したテキストをAPI経由でAIに校正してもらう拡張機能",
   "permissions": [
     "contextMenus",
